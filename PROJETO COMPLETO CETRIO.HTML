@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Informe CET-RIO - BASE CAMPO GRANDE</title>
+  <!-- Biblioteca para converter HTML em Imagem JPEG -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #eef2f5; padding: 15px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .container { width: 100%; max-width: 480px; }
+
+    /* Tela de Login */
+    .login-card {
+      background-color: #ffffff;
+      padding: 25px;
+      border-radius: 8px;
+      border: 2px solid #1b365d;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .login-card h2 { color: #1b365d; margin-bottom: 5px; font-size: 20px; text-transform: uppercase; }
+    .login-card p { color: #d9534f; font-weight: bold; font-size: 13px; margin-bottom: 20px; }
+    .error-msg { color: #d9534f; font-size: 12px; margin-top: 10px; display: none; font-weight: bold; }
+
+    /* Estilo das Abas (Tabs) */
+    .nav-tabs {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background-color: #cfd8dc;
+      color: #1b365d;
+      border: none;
+      border-radius: 6px 6px 0 0;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    .tab-btn.active {
+      background-color: #1b365d;
+      color: #ffffff;
+    }
+
+    /* Conteúdo das Abas */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Cartão visual do Formulário */
+    .card {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 0 0 8px 8px;
+      border: 2px solid #1b365d;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+    .header { text-align: center; border-bottom: 2px solid #1b365d; padding-bottom: 10px; margin-bottom: 15px; }
+    .header h2 { color: #1b365d; font-size: 18px; text-transform: uppercase; }
+    .header .sub { font-weight: bold; color: #d9534f; font-size: 13px; margin-top: 4px; }
+    
+    .section-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: #1b365d;
+      background-color: #eef2f5;
+      padding: 6px 8px;
+      border-radius: 4px;
+      margin: 12px 0 8px 0;
+      text-transform: uppercase;
+      border-left: 4px solid #1b365d;
+    }
+
+    /* Bloco visual do Ponto Base */
+    .pb-box {
+      background-color: #f8fafc;
+      border: 1px solid #cfd8dc;
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .pb-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: #1b365d;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .form-group { margin-bottom: 10px; display: flex; flex-direction: column; text-align: left; }
+    label { font-weight: bold; color: #333; font-size: 11px; margin-bottom: 3px; text-transform: uppercase; }
+    input, select, textarea {
+      padding: 8px;
+      border: 1px solid #b0bec5;
+      border-radius: 4px;
+      font-size: 13px;
+      color: #333;
+    }
+    input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
+    textarea { resize: vertical; height: 60px; }
+    
+    /* Regra para manter opções em negrito */
+    .select-bold { font-weight: bold; }
+    .select-bold option { font-weight: bold; }
+
+    /* Grade para organizar as 4 placas */
+    .grid-placas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    /* Previsualização da foto enviada */
+    .preview-container {
+      margin-top: 8px;
+      text-align: center;
+    }
+    .preview-img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      display: none;
+    }
+
+    .footer-card { 
+      text-align: center; 
+      font-weight: bold; 
+      color: #1b365d; 
+      margin-top: 15px; 
+      font-size: 12px; 
+      border-top: 1px solid #eef2f5;
+      padding-top: 10px;
+    }
+    .credits {
+      font-size: 10px;
+      color: #666;
+      font-weight: normal;
+      margin-top: 3px;
+    }
+
+    /* Botões */
+    .btn-group { display: flex; flex-direction: column; gap: 10px; }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-login { background-color: #1b365d; color: white; margin-top: 10px; }
+    .btn-login:hover { background-color: #12243e; }
+    .btn-jpeg { background-color: #25d366; color: white; }
+    .btn-jpeg:hover { background-color: #1ebd56; }
+    .btn-text { background-color: #1b365d; color: white; }
+    .btn-text:hover { background-color: #12243e; }
+    .btn-logout { background-color: #d9534f; color: white; margin-top: 10px; padding: 8px; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- TELA DE LOGIN -->
+  <div class="login-card" id="loginScreen">
+    <h2>Informe CET-RIO</h2>
+    <p>BASE CAMPO GRANDE</p>
+    
+    <form onsubmit="autenticar(event)">
+      <div class="form-group">
+        <label for="matricula">Matrícula:</label>
+        <input type="text" id="matricula" placeholder="Digite sua matrícula" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" placeholder="Digite sua senha" required>
+      </div>
+
+      <button type="submit" class="btn btn-login">Acessar Sistema</button>
+      <div class="error-msg" id="loginError">Matrícula ou senha incorretos!</div>
+    </form>
+
+    <div class="footer-card" style="border: none;">
+      <div class="credits">Desenvolvido por David Trajano</div>
+    </div>
+  </div>
+
+  <!-- TELA DO FORMULÁRIO (OCULTA INICIALMENTE) -->
+  <div id="formScreen" style="display: none;">
+    
+    <!-- MENU DE ABAS -->
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="trocarAba('ocorrencias', this)">Ocorrências</button>
+      <button class="tab-btn" onclick="trocarAba('ronda', this)">Ronda</button>
+    </div>
+
+    <!-- ABA 1: OCORRÊNCIAS -->
+    <div id="tabOcorrencias" class="tab-content active">
+      <div class="card" id="informeCard">
+        <div class="header">
+          <h2>Informe CET-RIO</h2>
+          <div class="sub">BASE CAMPO GRANDE - OCORRÊNCIAS</div>
+        </div>
+
+        <div class="form-group">
+          <label for="tipoAt">Tipo AT:</label>
+          <select id="tipoAt">
+            <option value="NENHUMA">NENHUMA</option>
+            <option value="AC">AC</option>
+            <option value="EM">EM</option>
+            <option value="PF">PF</option>
+            <option value="FC">FC</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="categoria">Categoria:</label>
+          <select id="categoria">
+            <option value="NENHUMA">NENHUMA</option>
+            <option value="VP">VP</option>
+            <option value="UT">UT</option>
+            <option value="MT">MT</option>
+            <option value="ON">ON</option>
+            <option value="CM">CM</option>
+            <option value="CR">CR</option>
+            <option value="BICICLETA">BICICLETA</option>
+            <option value="BC ELETRICA">BC ELETRICA</option>
+            <option value="VP X VP">VP X VP</option>
+            <option value="VP X CM">VP X CM</option>
+            <option value="VP X CR">VP X CR</option>
+            <option value="VP X MT">VP X MT</option>
+            <option value="MT X MT">MT X MT</option>
+            <option value="ON X VP">ON X VP</option>
+            <option value="CR X ON">CR X ON</option>
+            <option value="ON X MT">ON X MT</option>
+            <option value="CR X MT">CR X MT</option>
+            <option value="UT X MT">UT X MT</option>
+            <option value="UT X VP">UT X VP</option>
+            <option value="UT X CR">UT X CR</option>
+            <option value="UT X ON">UT X ON</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="local">Local:</label>
+          <input type="text" id="local" placeholder="Ex: Av. Brasil, alt. de Campo Grande">
+        </div>
+
+        <!-- Seção de Placas -->
+        <div class="section-title">Identificação de Placas</div>
+        <div class="grid-placas">
+          <div class="form-group">
+            <label for="placa1">Placa 1:</label>
+            <input type="text" id="placa1" placeholder="Placa 1">
+          </div>
+          <div class="form-group">
+            <label for="placa2">Placa 2:</label>
+            <input type="text" id="placa2" placeholder="Placa 2">
+          </div>
+          <div class="form-group">
+            <label for="placa3">Placa 3:</label>
+            <input type="text" id="placa3" placeholder="Placa 3">
+          </div>
+          <div class="form-group">
+            <label for="placa4">Placa 4:</label>
+            <input type="text" id="placa4" placeholder="Placa 4">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="hora">Hora:</label>
+          <input type="time" id="hora">
+        </div>
+
+        <div class="form-group">
+          <label for="dinamica">Dinâmica:</label>
+          <textarea id="dinamica" placeholder="Descreva o ocorrido..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="reboque">Reboque:</label>
+          <select id="reboque">
+            <option value="NENHUM">NENHUM</option>
+            <option value="RB LEVE">RB LEVE</option>
+            <option value="RB PESADO">RB PESADO</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="agente">Agente:</label>
+          <input type="text" id="agente" readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="viaturaAgente">Viatura Agente:</label>
+          <input type="text" id="viaturaAgente" placeholder="Ex: VTR 01">
+        </div>
+
+        <!-- Caixa CBMERJ -->
+        <div class="section-title">CBMERJ</div>
+        <div class="form-group">
+          <label for="bm">BM:</label>
+          <input type="text" id="bm" placeholder="Nome / Identificação">
+        </div>
+        <div class="form-group">
+          <label for="viaturaBm">Viatura CBMERJ:</label>
+          <input type="text" id="viaturaBm" placeholder="Ex: ABS-123">
+        </div>
+
+        <!-- Caixa PMERJ -->
+        <div class="section-title">PMERJ</div>
+        <div class="form-group">
+          <label for="pm">PM:</label>
+          <input type="text" id="pm" placeholder="Nome / Identificação">
+        </div>
+        <div class="form-group">
+          <label for="viaturaPm">Viatura PMERJ:</label>
+          <input type="text" id="viaturaPm" placeholder="Ex: VTR 40-123">
+        </div>
+
+        <!-- Anexo de Foto -->
+        <div class="form-group" style="margin-top: 10px;">
+          <label for="inputFoto">Foto (Anexar Imagem):</label>
+          <input type="file" id="inputFoto" accept="image/*" onchange="carregarFoto(event)">
+          <div class="preview-container">
+            <img id="imgPreview" class="preview-img" alt="Foto do Ocorrido">
+          </div>
+        </div>
+
+        <div class="footer-card">
+          BASE CAMPO GRANDE
+          <div class="credits">Desenvolvido por David Trajano</div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-jpeg" onclick="enviarJPEG('informeCard', 'Ocorrencia_CET_RIO.jpg')">Enviar como Imagem (JPEG)</button>
+        <button class="btn btn-text" onclick="enviarTexto()">Enviar como Texto</button>
+      </div>
+    </div>
+
+    <!-- ABA 2: RONDA -->
+    <div id="tabRonda" class="tab-content">
+      <div class="card" id="rondaCard">
+        <div class="header">
+          <h2>Informe CET-RIO</h2>
+          <div class="sub">BASE CAMPO GRANDE - RONDA</div>
+        </div>
+
+        <div class="form-group">
+          <label for="horaRonda">Hora da Ronda:</label>
+          <input type="time" id="horaRonda">
+        </div>
+
+        <div class="form-group">
+          <label for="viaturaRonda">Viatura:</label>
+          <input type="text" id="viaturaRonda" placeholder="Ex: VTR 01">
+        </div>
+
+        <div class="section-title">Pontos Base (PB)</div>
+
+        <!-- PB 1 -->
+        <div class="pb-box">
+          <div class="pb-title">PONTO BASE 1</div>
+          <div class="form-group">
+            <label for="pb1_qth">QTH:</label>
+            <select id="pb1_qth" class="select-bold">
+              <option value="NENHUM">SELECIONE O QTH...</option>
+              <option value="CARREFOUR">CARREFOUR</option>
+              <option value="ALGI">ALGI</option>
+              <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+              <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+              <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+              <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+              <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+              <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+              <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+              <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+              <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+              <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+              <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+              <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+              <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+              <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+              <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+              <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+              <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+              <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+              <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+              <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+              <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+              <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pb1_status">Trânsito / Situação:</label>
+            <select id="pb1_status">
+              <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+              <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+              <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+              <option value="RETENÇÃO">RETENÇÃO</option>
+              <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+              <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+              <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+              <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+              <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+              <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+              <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+              <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+              <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+              <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+              <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+              <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PB 2 -->
+        <div class="pb-box">
+          <div class="pb-title">PONTO BASE 2</div>
+          <div class="form-group">
+            <label for="pb2_qth">QTH:</label>
+            <select id="pb2_qth" class="select-bold">
+              <option value="NENHUM">SELECIONE O QTH...</option>
+              <option value="CARREFOUR">CARREFOUR</option>
+              <option value="ALGI">ALGI</option>
+              <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+              <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+              <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+              <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+              <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+              <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+              <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+              <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+              <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+              <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+              <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+              <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+              <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+              <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+              <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+              <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+              <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+              <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+              <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+              <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+              <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+              <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pb2_status">Trânsito / Situação:</label>
+            <select id="pb2_status">
+              <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+              <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+              <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+              <option value="RETENÇÃO">RETENÇÃO</option>
+              <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+              <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+              <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+              <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+              <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+              <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+              <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+              <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+              <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+              <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+              <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+              <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PB 3 -->
+        <div class="pb-box">
+          <div class="pb-title">PONTO BASE 3</div>
+          <div class="form-group">
+            <label for="pb3_qth">QTH:</label>
+            <select id="pb3_qth" class="select-bold">
+              <option value="NENHUM">SELECIONE O QTH...</option>
+              <option value="CARREFOUR">CARREFOUR</option>
+              <option value="ALGI">ALGI</option>
+              <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+              <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+              <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+              <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+              <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+              <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+              <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+              <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+              <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+              <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+              <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+              <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+              <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+              <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+              <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+              <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+              <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+              <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+              <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+              <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+              <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+              <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pb3_status">Trânsito / Situação:</label>
+            <select id="pb3_status">
+              <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+              <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+              <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+              <option value="RETENÇÃO">RETENÇÃO</option>
+              <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+              <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+              <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+              <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+              <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+              <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+              <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+              <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+              <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+              <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+              <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+              <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PB 4 -->
+        <div class="pb-box">
+          <div class="pb-title">PONTO BASE 4</div>
+          <div class="form-group">
+            <label for="pb4_qth">QTH:</label>
+            <select id="pb4_qth" class="select-bold">
+              <option value="NENHUM">SELECIONE O QTH...</option>
+              <option value="CARREFOUR">CARREFOUR</option>
+              <option value="ALGI">ALGI</option>
+              <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+              <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+              <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+              <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+              <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+              <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+              <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+              <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+              <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+              <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+              <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+              <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+              <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+              <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+              <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+              <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+              <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+              <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+              <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+              <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+              <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+              <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pb4_status">Trânsito / Situação:</label>
+            <select id="pb4_status">
+              <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+              <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+              <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+              <option value="RETENÇÃO">RETENÇÃO</option>
+              <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+              <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+              <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+              <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+              <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+              <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+              <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+              <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+              <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+              <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+              <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+              <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PB 5 -->
+        <div class="pb-box">
+          <div class="pb-title">PONTO BASE 5</div>
+          <div class="form-group">
+            <label for="pb5_qth">QTH:</label>
+            <select id="pb5_qth" class="select-bold">
+              <option value="NENHUM">SELECIONE O QTH...</option>
+              <option value="CARREFOUR">CARREFOUR</option>
+              <option value="ALGI">ALGI</option>
+              <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+              <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+              <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+              <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+              <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+              <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+              <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+              <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+              <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+              <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+              <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+              <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+              <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+              <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+              <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+              <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+              <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+              <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+              <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+              <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+              <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+              <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pb5_status">Trânsito / Situação:</label>
+            <select id="pb5_status">
+              <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+              <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+              <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+              <option value="RETENÇÃO">RETENÇÃO</option>
+              <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+              <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+              <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+              <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+              <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+              <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+              <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+              <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+              <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+              <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+              <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+              <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PB 6 -->
+        <div class="pb-box">
+          <div class="pb-title">PONTO BASE 6</div>
+          <div class="form-group">
+            <label for="pb6_qth">QTH:</label>
+            <select id="pb6_qth" class="select-bold">
+              <option value="NENHUM">SELECIONE O QTH...</option>
+              <option value="CARREFOUR">CARREFOUR</option>
+              <option value="ALGI">ALGI</option>
+              <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+              <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+              <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+              <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+              <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+              <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+              <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+              <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+              <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+              <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+              <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+              <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+              <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+              <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+              <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+              <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+              <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+              <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+              <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+              <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+              <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+              <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+              <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="pb6_status">Trânsito / Situação:</label>
+            <select id="pb6_status">
+              <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+              <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+              <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+              <option value="RETENÇÃO">RETENÇÃO</option>
+              <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+              <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+              <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+              <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+              <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+              <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+              <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+              <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+              <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+              <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+              <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+              <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+            </select>
+          </div>
+        </div>
+<!-- PONTO BASE 7 -->
+<div class="pb-box">
+  <div class="pb-title">PONTO BASE 7</div>
+  <div class="form-group">
+    <label for="pb7_qth">QTH:</label>
+    <select id="pb7_qth" class="select-bold">
+      <option value="NENHUM">SELECIONE O QTH...</option>
+      <option value="CARREFOUR">CARREFOUR</option>
+      <option value="ALGI">ALGI</option>
+      <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+      <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+      <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+      <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+      <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+      <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+      <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+      <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+      <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+      <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+      <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+      <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+      <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+      <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+      <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+      <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+      <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+      <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+      <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+      <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+      <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+      <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+      <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+      <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="pb7_status">Trânsito / Situação:</label>
+    <select id="pb7_status">
+      <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+      <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+      <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+      <option value="RETENÇÃO">RETENÇÃO</option>
+      <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+      <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+      <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+      <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+      <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+      <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+      <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+      <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+      <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+      <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+      <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+      <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+    </select>
+  </div>
+</div>
+
+<!-- PONTO BASE 8 -->
+<div class="pb-box">
+  <div class="pb-title">PONTO BASE 8</div>
+  <div class="form-group">
+    <label for="pb8_qth">QTH:</label>
+    <select id="pb8_qth" class="select-bold">
+      <option value="NENHUM">SELECIONE O QTH...</option>
+      <option value="CARREFOUR">CARREFOUR</option>
+      <option value="ALGI">ALGI</option>
+      <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+      <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+      <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+      <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+      <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+      <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+      <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+      <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+      <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+      <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+      <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+      <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+      <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+      <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+      <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+      <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+      <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+      <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+      <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+      <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+      <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+      <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+      <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+      <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="pb8_status">Trânsito / Situação:</label>
+    <select id="pb8_status">
+      <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+      <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+      <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+      <option value="RETENÇÃO">RETENÇÃO</option>
+      <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+      <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+      <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+      <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+      <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+      <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+      <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+      <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+      <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+      <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+      <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+      <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+    </select>
+  </div>
+</div>
+
+<!-- PONTO BASE 9 -->
+<div class="pb-box">
+  <div class="pb-title">PONTO BASE 9</div>
+  <div class="form-group">
+    <label for="pb9_qth">QTH:</label>
+    <select id="pb9_qth" class="select-bold">
+      <option value="NENHUM">SELECIONE O QTH...</option>
+      <option value="CARREFOUR">CARREFOUR</option>
+      <option value="ALGI">ALGI</option>
+      <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+      <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+      <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+      <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+      <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+      <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+      <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+      <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+      <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+      <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+      <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+      <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+      <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+      <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+      <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+      <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+      <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+      <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+      <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+      <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+      <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+      <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+      <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+      <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="pb9_status">Trânsito / Situação:</label>
+    <select id="pb9_status">
+      <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+      <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+      <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+      <option value="RETENÇÃO">RETENÇÃO</option>
+      <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+      <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+      <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+      <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+      <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+      <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+      <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+      <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+      <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+      <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+      <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+      <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+    </select>
+  </div>
+</div>
+
+<!-- PONTO BASE 10 -->
+<div class="pb-box">
+  <div class="pb-title">PONTO BASE 10</div>
+  <div class="form-group">
+    <label for="pb10_qth">QTH:</label>
+    <select id="pb10_qth" class="select-bold">
+      <option value="NENHUM">SELECIONE O QTH...</option>
+      <option value="CARREFOUR">CARREFOUR</option>
+      <option value="ALGI">ALGI</option>
+      <option value="LARGO DA MAÇONARIA">LARGO DA MAÇONARIA</option>
+      <option value="ESTRADA RIO DO A">ESTRADA RIO DO A</option>
+      <option value="VIADUTO ALIM PEDRO">VIADUTO ALIM PEDRO</option>
+      <option value="ESTRADA DO MENDANHA">ESTRADA DO MENDANHA</option>
+      <option value="ESTRADA DO MENDANHA (40 BPM)">ESTRADA DO MENDANHA (40 BPM)</option>
+      <option value="ESTRADA DA POSSE">ESTRADA DA POSSE</option>
+      <option value="ESTRADA DA POSSE X EST DO LAMEIRÃO">ESTRADA DA POSSE X EST DO LAMEIRÃO</option>
+      <option value="ESTRADA DO LAMEIRÃO">ESTRADA DO LAMEIRÃO</option>
+      <option value="AV MARIA TERESA">AV MARIA TERESA</option>
+      <option value="AV CESARIO DE MELO">AV CESARIO DE MELO</option>
+      <option value="AV CESARIO DE MELO X PROF CASTILHO">AV CESARIO DE MELO X PROF CASTILHO</option>
+      <option value="RUA AUGUSTO VASCONCELOS">RUA AUGUSTO VASCONCELOS</option>
+      <option value="AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS">AV CESARIO DE MELO X R. AUGUSTO VASCONCELOS</option>
+      <option value="AV CESARIO DE MELO X EST DO CABUÇU">AV CESARIO DE MELO X EST DO CABUÇU</option>
+      <option value="AV CESARIO DE MELO (PARQUE OESTE)">AV CESARIO DE MELO (PARQUE OESTE)</option>
+      <option value="VIADUTO NOVO">VIADUTO NOVO</option>
+      <option value="RUA ARTHUR RIOS">RUA ARTHUR RIOS</option>
+      <option value="AV SANTA CRUZ">AV SANTA CRUZ</option>
+      <option value="ESTRADA DO MONTEIRO">ESTRADA DO MONTEIRO</option>
+      <option value="ESTR DO MONTEIRO (CHEVROLET)">ESTR DO MONTEIRO (CHEVROLET)</option>
+      <option value="ESTR DO MONTEIRO (IRAQUÃ)">ESTR DO MONTEIRO (IRAQUÃ)</option>
+      <option value="ESTR DO MONTEIRO (MOVIDA)">ESTR DO MONTEIRO (MOVIDA)</option>
+      <option value="ESTR DO MONTEIRO X R ESCULAPIO">ESTR DO MONTEIRO X R ESCULAPIO</option>
+      <option value="RUA CAMPO FORMOSO">RUA CAMPO FORMOSO</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="pb10_status">Trânsito / Situação:</label>
+    <select id="pb10_status">
+      <option value="NÃO INFORMADO">SELECIONE A SITUAÇÃO...</option>
+      <option value="LIVRE / SEM ALTERAÇÃO">LIVRE / SEM ALTERAÇÃO</option>
+      <option value="TRÂNSITO INTENSO">TRÂNSITO INTENSO</option>
+      <option value="RETENÇÃO">RETENÇÃO</option>
+      <option value="INTERDIÇÃO PARCIAL">INTERDIÇÃO PARCIAL</option>
+      <option value="INTERDIÇÃO TOTAL">INTERDIÇÃO TOTAL</option>
+      <option value="OCORRÊNCIA EM ANDAMENTO">OCORRÊNCIA EM ANDAMENTO</option>
+      <option value="SENTIDO AV BRASIL 5/5">SENTIDO AV BRASIL 5/5</option>
+      <option value="SENTIDO BARRA 5/5">SENTIDO BARRA 5/5</option>
+      <option value="SENTIDO AV BRASIL C/ RETENÇÃO">SENTIDO AV BRASIL C/ RETENÇÃO</option>
+      <option value="SENTIDO BARRA C/ RETENÇÃO">SENTIDO BARRA C/ RETENÇÃO</option>
+      <option value="AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO">AMBOS OS SENTIDOS LIVRE/SEM ALTERAÇÃO</option>
+      <option value="SENTIDO SANTA CRUZ 5/5">SENTIDO SANTA CRUZ 5/5</option>
+      <option value="SENTIDO SANTA CRUZ C/ RETENÇÃO">SENTIDO SANTA CRUZ C/ RETENÇÃO</option>
+      <option value="SENTIDO BANGU 5/5">SENTIDO BANGU 5/5</option>
+      <option value="SENTIDO BANGU C/ RETENÇÃO">SENTIDO BANGU C/ RETENÇÃO</option>
+    </select>
+  </div>
+</div>
+        
+        <div class="form-group">
+          <label for="obsRonda">Observações Gerais:</label>
+          <textarea id="obsRonda" placeholder="Digite observações sobre a ronda se necessário..."></textarea>
+        </div>
+
+        <div class="footer-card">
+          BASE CAMPO GRANDE
+          <div class="credits">Desenvolvido por David Trajano</div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-jpeg" onclick="enviarJPEG('rondaCard', 'Ronda_CET_RIO.jpg')">Enviar Ronda como Imagem (JPEG)</button>
+        <button class="btn btn-text" onclick="enviarTextoRonda()">Enviar Ronda como Texto</button>
+      </div>
+    </div>
+
+    <!-- BOTÃO SAIR (COMUM A AMBAS AS ABAS) -->
+    <div style="margin-top: 15px;">
+      <button class="btn btn-logout" onclick="sair()">Sair do Sistema</button>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // Cadastro de Usuários
+  const usuariosCadastrados = {
+    "3125": { senha: "1398", agente: "Mike Eduardo (3125)" },
+    "3554": { senha: "1645", agente: "Mike David Trajano (3554)" },
+    "00000": { senha: "00000", agente: "ADM David Trajano (0000)" },
+    "10591": { senha: "0528", agente: "Mike Sidnei Cicero (10591)" }
+  };
+
+  // Alternar entre as abas Ocorrências e Ronda
+  function trocarAba(nomeAba, elementoBotao) {
+    const conteudos = document.querySelectorAll('.tab-content');
+    conteudos.forEach(content => content.classList.remove('active'));
+
+    const botoes = document.querySelectorAll('.tab-btn');
+    botoes.forEach(btn => btn.classList.remove('active'));
+
+    if (nomeAba === 'ocorrencias') {
+      document.getElementById('tabOcorrencias').classList.add('active');
+    } else if (nomeAba === 'ronda') {
+      document.getElementById('tabRonda').classList.add('active');
+    }
+    elementoBotao.classList.add('active');
+  }
+
+  // Autenticação
+  function autenticar(event) {
+    event.preventDefault();
+    const mat = document.getElementById('matricula').value.trim();
+    const pass = document.getElementById('senha').value.trim();
+    const errorMsg = document.getElementById('loginError');
+
+    const usuario = usuariosCadastrados[mat];
+
+    if (usuario && usuario.senha === pass) {
+      document.getElementById('agente').value = usuario.agente;
+
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('formScreen').style.display = 'block';
+      errorMsg.style.display = 'none';
+    } else {
+      errorMsg.style.display = 'block';
+    }
+  }
+
+  function sair() {
+    document.getElementById('formScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'block';
+    document.getElementById('matricula').value = '';
+    document.getElementById('senha').value = '';
+    document.getElementById('agente').value = '';
+  }
+
+  // Carrega a foto selecionada na tela
+  function carregarFoto(event) {
+    const input = event.target;
+    const preview = document.getElementById('imgPreview');
+    
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      }
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      preview.src = '';
+      preview.style.display = 'none';
+    }
+  }
+
+  // Envia qualquer cartão como Imagem JPEG
+  async function enviarJPEG(elementId, fileName) {
+    const cardElement = document.getElementById(elementId);
+    try {
+      const canvas = await html2canvas(cardElement, { scale: 2, useCORS: true });
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], fileName, { type: 'image/jpeg' });
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: 'Informe CET-RIO',
+            text: 'Informe CET-RIO - Base Campo Grande'
+          });
+        } else {
+          const a = document.createElement('a');
+          a.href = URL.createObjectURL(blob);
+          a.download = fileName;
+          a.click();
+          alert('Imagem JPEG gerada e baixada! Agora basta anexá-la no WhatsApp.');
+        }
+      }, 'image/jpeg', 0.95);
+    } catch (error) {
+      alert('Erro ao gerar imagem: ' + error.message);
+    }
+  }
+
+  // Envia Ocorrência em formato de Texto Formatado
+  function enviarTexto() {
+    const tipoAt = document.getElementById('tipoAt').value;
+    const categoria = document.getElementById('categoria').value;
+    const local = document.getElementById('local').value || '-';
+    const placa1 = document.getElementById('placa1').value || '-';
+    const placa2 = document.getElementById('placa2').value || '-';
+    const placa3 = document.getElementById('placa3').value || '-';
+    const placa4 = document.getElementById('placa4').value || '-';
+    const hora = document.getElementById('hora').value || '-';
+    const dinamica = document.getElementById('dinamica').value || '-';
+    const reboque = document.getElementById('reboque').value;
+    const agente = document.getElementById('agente').value;
+    const viaturaAgente = document.getElementById('viaturaAgente').value || '-';
+    const bm = document.getElementById('bm').value || '-';
+    const viaturaBm = document.getElementById('viaturaBm').value || '-';
+    const pm = document.getElementById('pm').value || '-';
+    const viaturaPm = document.getElementById('viaturaPm').value || '-';
+    const inputFoto = document.getElementById('inputFoto');
+    const fotoStatus = inputFoto.files.length > 0 ? 'Foto Anexada' : 'Sem foto';
+
+    const mensagem = 
+`*OCORRENCIA CET RIO*
+
+*Tipo AT:* ${tipoAt}
+*Categoria:* ${categoria}
+*Local:* ${local}
+
+*Placa 1:* ${placa1}
+*Placa 2:* ${placa2}
+*Placa 3:* ${placa3}
+*Placa 4:* ${placa4}
+
+*Hora:* ${hora}
+*Dinâmica:* ${dinamica}
+*REBOQUE:* ${reboque}
+*🧍🏾‍♂️Agente:* ${agente}
+*Viatura:* ${viaturaAgente}
+
+*CBMERJ*
+*BM:* ${bm}
+*Viatura:* ${viaturaBm}
+
+*PMERJ*
+*PM:* ${pm}
+*Viatura:* ${viaturaPm}
+
+*Foto:* ${fotoStatus}
+
+*BASE CAMPO GRANDE*`; // <--- A CRASE E O PONTO E VÍRGULA FALTAVAM AQUI!
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, '_blank');
+  }
+
+ // Envia Ronda em formato de Texto Formatado (Consolidando QTH e Situação de cada PB)
+  function enviarTextoRonda() {
+    const hora = document.getElementById('horaRonda').value || '-';
+    const viatura = document.getElementById('viaturaRonda').value || '-';
+    const agente = document.getElementById('agente').value || '-';
+    const obs = document.getElementById('obsRonda').value || '-';
+
+    let listaPBs = "";
+    for (let i = 1; i <= 10; i++) {
+      const qth = document.getElementById(`pb${i}_qth`).value;
+      const status = document.getElementById(`pb${i}_status`).value;
+      // O \n\n no final garante a quebra de duas linhas (uma para descer, outra para dar o espaço)
+      listaPBs += `*PB ${i}:* QTH: ${qth} | Situação: ${status}\n\n`;
+    }
+
+    const mensagem = 
+`*INFORME DE RONDA - CET RIO*
+
+*Hora:* ${hora}
+*Viatura:* ${viatura}
+*Agente:* ${agente}
+
+*PONTOS BASE (PB)*
+${listaPBs}
+*Observações:* ${obs}
+
+*BASE CAMPO GRANDE*`;
+
+    window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, '_blank');
+  }
+</script>
+
+</body>
+</html>
