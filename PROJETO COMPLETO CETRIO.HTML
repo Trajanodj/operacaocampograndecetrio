@@ -97,7 +97,10 @@
     }
 
     .form-group { margin-bottom: 10px; display: flex; flex-direction: column; text-align: left; }
+    .checkbox-group { flex-direction: row; align-items: center; gap: 8px; cursor: pointer; margin-top: 5px; }
+    .checkbox-group input { cursor: pointer; }
     label { font-weight: bold; color: #333; font-size: 11px; margin-bottom: 3px; text-transform: uppercase; }
+    .checkbox-group label { margin-bottom: 0; cursor: pointer; }
     input, select, textarea {
       padding: 8px;
       border: 1px solid #b0bec5;
@@ -186,6 +189,12 @@
       <div class="form-group">
         <label for="senha">Senha:</label>
         <input type="password" id="senha" placeholder="Digite sua senha" required>
+      </div>
+
+      <!-- CAIXA "MANTER CONECTADO" -->
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="manterConectado">
+        <label for="manterConectado">Manter conectado / Lembrar-me</label>
       </div>
 
       <button type="submit" class="btn btn-login">Acessar Sistema</button>
@@ -1250,11 +1259,28 @@
 <script>
   // Cadastro de Usuários
   const usuariosCadastrados = {
+    "0003": { senha: "1675", agente: "Mike Alan (0000)" },
+    "0004": { senha: "1384", agente: "Mike Chinayder (MK18)" },
     "3125": { senha: "1398", agente: "Mike Eduardo (3125)" },
     "448": { senha: "0000", agente: "Mike Barboza (448)" },
     "3554": { senha: "1645", agente: "Mike David Trajano (3554)" },
     "00000": { senha: "00000", agente: "ADM GERAL (0000)" },
-    "10591": { senha: "0528", agente: "Mike Sidnei Cicero (10591)" }
+    "0000": { senha: "0000", agente: "Mike Cristian (0000)" },
+    "10591": { senha: "0528", agente: "Mike Sidnei Cicero (10591)" },
+    "0001": { senha: "0001", agente: "SUPERVISOR MAIA (SUP)" },
+    "0002": { senha: "0002", agente: "COORD VALMIR (COORD)" },
+  };
+
+  // Carrega credenciais salvas ao abrir a página
+  window.onload = function() {
+    const matriculaSalva = localStorage.getItem('cetrio_matricula');
+    const senhaSalva = localStorage.getItem('cetrio_senha');
+
+    if (matriculaSalva && senhaSalva) {
+      document.getElementById('matricula').value = matriculaSalva;
+      document.getElementById('senha').value = senhaSalva;
+      document.getElementById('manterConectado').checked = true;
+    }
   };
 
   // Alternar entre as abas Ocorrências e Ronda
@@ -1278,11 +1304,21 @@
     event.preventDefault();
     const mat = document.getElementById('matricula').value.trim();
     const pass = document.getElementById('senha').value.trim();
+    const manter = document.getElementById('manterConectado').checked;
     const errorMsg = document.getElementById('loginError');
 
     const usuario = usuariosCadastrados[mat];
 
     if (usuario && usuario.senha === pass) {
+      // Salva ou remove do localStorage conforme o checkbox
+      if (manter) {
+        localStorage.setItem('cetrio_matricula', mat);
+        localStorage.setItem('cetrio_senha', pass);
+      } else {
+        localStorage.removeItem('cetrio_matricula');
+        localStorage.removeItem('cetrio_senha');
+      }
+
       document.getElementById('agente').value = usuario.agente;
 
       document.getElementById('loginScreen').style.display = 'none';
@@ -1296,8 +1332,13 @@
   function sair() {
     document.getElementById('formScreen').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'block';
-    document.getElementById('matricula').value = '';
-    document.getElementById('senha').value = '';
+    
+    // Se não estiver marcado para manter conectado, limpa os campos ao sair
+    if (!document.getElementById('manterConectado').checked) {
+      document.getElementById('matricula').value = '';
+      document.getElementById('senha').value = '';
+    }
+    
     document.getElementById('agente').value = '';
   }
 
