@@ -1260,9 +1260,10 @@
   // Cadastro de Usuários
   const usuariosCadastrados = {
     "0003": { senha: "1675", agente: "Mike Alan (0000)" },
+    "10477": { senha: "1762", agente: "Mike Alan (10477)" },
     "0004": { senha: "1384", agente: "Mike Chinayder (MK18)" },
     "3125": { senha: "1398", agente: "Mike Eduardo (3125)" },
-    "448": { senha: "0000", agente: "Mike Barboza (448)" },
+    "9844": { senha: "1115", agente: "Mike Barboza (9844)" },
     "3554": { senha: "1645", agente: "Mike David Trajano (3554)" },
     "00000": { senha: "00000", agente: "ADM GERAL (0000)" },
     "0000": { senha: "0000", agente: "Mike Cristian (0000)" },
@@ -1386,57 +1387,67 @@
     }
   }
 
-  // Envia Ocorrência em formato de Texto Formatado
+// Envia Ocorrência em formato de Texto Formatado (Apenas informações preenchidas com espaço de 1 linha)
   function enviarTexto() {
     const tipoAt = document.getElementById('tipoAt').value;
     const categoria = document.getElementById('categoria').value;
-    const local = document.getElementById('local').value || '-';
-    const placa1 = document.getElementById('placa1').value || '-';
-    const placa2 = document.getElementById('placa2').value || '-';
-    const placa3 = document.getElementById('placa3').value || '-';
-    const placa4 = document.getElementById('placa4').value || '-';
-    const hora = document.getElementById('hora').value || '-';
-    const dinamica = document.getElementById('dinamica').value || '-';
+    const local = document.getElementById('local').value.trim();
+    const placa1 = document.getElementById('placa1').value.trim();
+    const placa2 = document.getElementById('placa2').value.trim();
+    const placa3 = document.getElementById('placa3').value.trim();
+    const placa4 = document.getElementById('placa4').value.trim();
+    const hora = document.getElementById('hora').value.trim();
+    const dinamica = document.getElementById('dinamica').value.trim();
     const reboque = document.getElementById('reboque').value;
-    const agente = document.getElementById('agente').value;
-    const viaturaAgente = document.getElementById('viaturaAgente').value || '-';
-    const bm = document.getElementById('bm').value || '-';
-    const viaturaBm = document.getElementById('viaturaBm').value || '-';
-    const pm = document.getElementById('pm').value || '-';
-    const viaturaPm = document.getElementById('viaturaPm').value || '-';
+    const agente = document.getElementById('agente').value.trim();
+    const viaturaAgente = document.getElementById('viaturaAgente').value.trim();
+    const bm = document.getElementById('bm').value.trim();
+    const viaturaBm = document.getElementById('viaturaBm').value.trim();
+    const pm = document.getElementById('pm').value.trim();
+    const viaturaPm = document.getElementById('viaturaPm').value.trim();
     const inputFoto = document.getElementById('inputFoto');
-    const fotoStatus = inputFoto.files.length > 0 ? 'Foto Anexada' : 'Sem foto';
 
-    const mensagem = 
-`*OCORRENCIA CET RIO*
+    let linhas = ["*OCORRENCIA CET RIO*"];
 
-*Tipo AT:* ${tipoAt}
-*Categoria:* ${categoria}
-*Local:* ${local}
+    if (tipoAt !== "NENHUMA") linhas.push(`*Tipo AT:* ${tipoAt}`);
+    if (categoria !== "NENHUMA") linhas.push(`*Categoria:* ${categoria}`);
+    if (local !== "") linhas.push(`*Local:* ${local}`);
 
-*Placa 1:* ${placa1}
-*Placa 2:* ${placa2}
-*Placa 3:* ${placa3}
-*Placa 4:* ${placa4}
+    // Placas
+    if (placa1 !== "") linhas.push(`*Placa 1:* ${placa1}`);
+    if (placa2 !== "") linhas.push(`*Placa 2:* ${placa2}`);
+    if (placa3 !== "") linhas.push(`*Placa 3:* ${placa3}`);
+    if (placa4 !== "") linhas.push(`*Placa 4:* ${placa4}`);
 
-*Hora:* ${hora}
-*Dinâmica:* ${dinamica}
-*REBOQUE:* ${reboque}
-*🧍🏾‍♂️Agente:* ${agente}
-*Viatura:* ${viaturaAgente}
+    if (hora !== "") linhas.push(`*Hora:* ${hora}`);
+    if (dinamica !== "") linhas.push(`*Dinâmica:* ${dinamica}`);
+    if (reboque !== "NENHUM") linhas.push(`*REBOQUE:* ${reboque}`);
+    if (agente !== "") linhas.push(`*Agente:* ${agente}`);
+    if (viaturaAgente !== "") linhas.push(`*Viatura:* ${viaturaAgente}`);
 
-*CBMERJ*
-*BM:* ${bm}
-*Viatura:* ${viaturaBm}
+    // Bloco CBMERJ
+    if (bm !== "" || viaturaBm !== "") {
+      linhas.push("*CBMERJ*");
+      if (bm !== "") linhas.push(`*BM:* ${bm}`);
+      if (viaturaBm !== "") linhas.push(`*Viatura:* ${viaturaBm}`);
+    }
 
-*PMERJ*
-*PM:* ${pm}
-*Viatura:* ${viaturaPm}
+    // Bloco PMERJ
+    if (pm !== "" || viaturaPm !== "") {
+      linhas.push("*PMERJ*");
+      if (pm !== "") linhas.push(`*PM:* ${pm}`);
+      if (viaturaPm !== "") linhas.push(`*Viatura:* ${viaturaPm}`);
+    }
 
-*Foto:* ${fotoStatus}
+    // Foto
+    if (inputFoto.files && inputFoto.files.length > 0) {
+      linhas.push(`*Foto:* Foto Anexada`);
+    }
 
-*BASE CAMPO GRANDE*`;
+    linhas.push("*BASE CAMPO GRANDE*");
 
+    // Junta cada item adicionando uma linha em branco entre eles
+    const mensagem = linhas.join("\n\n");
     window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, '_blank');
   }
 
